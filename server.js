@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require("path");
 const connectDB = require("./config/db");
 
 // dot config
@@ -26,9 +27,12 @@ app.use("/api/v1/inventory", require("./routes/inventoryRoutes"));
 app.use("/api/v1/analytics", require("./routes/analyticsRoutes"));
 app.use("/api/v1/admin", require("./routes/adminRoutes"));
 
-// ✅ Root route to fix Render 404
+// ✅ Serve static files from the client/public folder
+app.use(express.static(path.join(__dirname, "client/public")));
+
+// ✅ Serve index.html at root
 app.get("/", (req, res) => {
-  res.send("Welcome to BloodForAll API 🚑");
+  res.sendFile(path.join(__dirname, "client/public/index.html"));
 });
 
 // port
@@ -37,6 +41,6 @@ const PORT = process.env.PORT || 8080;
 // listen
 app.listen(PORT, () => {
   console.log(
-    `Node Server Running In ${process.env.DEV_MODE} ModeOn Port ${process.env.PORT}`.bgBlue.white
+    `Node Server Running In ${process.env.DEV_MODE} Mode On Port ${PORT}`.bgBlue.white
   );
 });
